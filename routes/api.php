@@ -20,7 +20,7 @@ Route::post('/register', function (Request $request) {
     $user = new User([
         'name' => $request->name,
         'email' => $request->email,
-        'password' => hash('sha256', $request->password),
+        'password' => $request->password,
     ]);
 
     if ($user->save()) {
@@ -47,14 +47,16 @@ Route::post('/login', function (Request $request) {
 
         $user = auth()->user();
 
-        $token = $user->createToken('token');
+        $token = $user->createToken('token')->accessToken;
 
         return $token;
     }
+
+    return response()->json(['message' => 'Unauthorized'], 401);
 });
 
 Route::get('/profile', function () {
 
     return 'My Profile';
 
-})->middleware('auth:sanctum');
+})->middleware('auth:api');
