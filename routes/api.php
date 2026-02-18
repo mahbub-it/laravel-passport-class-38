@@ -20,7 +20,7 @@ Route::post('/register', function (Request $request) {
     $user = new User([
         'name' => $request->name,
         'email' => $request->email,
-        'password' => bcrypt($request->password),
+        'password' => hash('sha256', $request->password),
     ]);
 
     if ($user->save()) {
@@ -57,4 +57,4 @@ Route::get('/profile', function () {
 
     return 'My Profile';
 
-})->middleware('auth:api');
+})->middleware('auth:sanctum');
